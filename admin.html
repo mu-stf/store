@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="utf-8">
+  <title>لوحة التحكم الملكية — غريم</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="app-bg"></div>
+
+  <header class="site-header">
+    <div class="container">
+      <h1 class="logo">GHARIM — غريم</h1>
+      <nav class="main-nav">
+        <a href="cohee.html">الرئيسية</a>
+        <button onclick="logout()"
+          style="background: none; border: none; color: var(--text); font-weight: 600; cursor: pointer; font-family: inherit;">تسجيل
+          الخروج</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="offlineNotice" class="offline-banner" style="display:none">وضع عدم الاتصال: الرجاء التحقق من بيانات
+      Supabase</div>
+
+    <section style="margin: 40px 0;">
+      <h2 style="color: var(--primary); font-size: 2.5rem; font-weight: 900; margin-bottom: 30px; text-align: center;">
+        📊 لوحة التحكم الإدارية</h2>
+
+      <!-- Seeding Section -->
+      <div id="seed-section"
+        style="background: var(--accent-light); padding: 20px; border-radius: 20px; border: 1px dashed var(--accent); margin-bottom: 30px; text-align: center;">
+        <h3 style="color: var(--primary); margin-bottom: 10px;">🔄 مزامنة بيانات المتجر</h3>
+        <p style="font-size: 0.9rem; color: var(--primary); margin-bottom: 15px;">قم بنقل المنتجات الفاخرة الافتراضية
+          إلى قاعدة البيانات الخاصة بك لتتمكن من تعديلها.</p>
+        <button onclick="seedSampleData()"
+          style="background: var(--accent); color: #fff; border: none; padding: 10px 25px; border-radius: 50px; font-weight: 800; cursor: pointer;">نشر
+          المنتجات الملكية للـ Database</button>
+      </div>
+
+      <div id="orders-container"
+        style="background: var(--white); padding: 30px; border-radius: 30px; box-shadow: var(--shadow-md); border: 1px solid rgba(197, 160, 33, 0.1); margin-bottom: 40px;">
+        <h3
+          style="margin-bottom: 20px; color: var(--primary); border-bottom: 2px solid var(--accent-light); padding-bottom: 10px;">
+          📦 الطلبات الأخيرة</h3>
+        <div id="orders"></div>
+      </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
+    <script src="supabase.js"></script>
+    <script src="app.js"></script>
+
+    <script>
+      // 🔐 حماية الصفحة + تحقق صلاحية الأدمن
+      (async () => {
+        const notice = document.getElementById('offlineNotice');
+
+        if (!window.supabase) {
+          console.error("Supabase client not found.");
+          alert("❌ Supabase غير مهيأ — لا يمكن الدخول إلى لوحة التحكم");
+          notice.style.display = 'block';
+          location.href = "cohee.html";
+          return;
+        }
+
+        const { data: session, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) {
+          console.error("Session error:", sessionError);
+          location.href = "auth.html";
+          return;
+        }
+
+        if (!session.session) {
+          console.warn("No active session found, redirecting to login.");
+          location.href = "auth.html";
+          return;
+        }
+
+        const user = session.session.user;
+        console.log("Authenticated user found:", user.email);
+
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('is_admin')
+          .eq('id', user.id)
+          .single();
+
+        if (profileError) {
+          console.error("Profile fetch error:", profileError);
+          alert("❌ تعذر التحقق من صلاحياتك. قد يكون حسابك غير مسجل في جدول الملفات الشخصية.");
+          location.href = "cohee.html";
+          return;
+        }
+
+        if (!profile || !profile.is_admin) {
+          console.warn("User is not an admin.");
+          alert("❌ عذراً، حسابك لا يملك صلاحيات المسؤول (Admin).");
+          location.href = "cohee.html";
+        } else {
+          console.log("Admin access granted.");
+        }
+      })();
+    </script>
+
+    <script>
+      // جلب الطلبات (أدمن فقط)
+      async function loadOrders() {
+        const el = document.getElementById('orders');
+        el.innerHTML = '';
+
+        let orders = [];
+        if (window.supabase) {
+          const { data } = await supabase
+            .from('orders')
+            .select('*')
+            .order('created_at', { ascending: false });
+          orders = data || [];
+        } else {
+          orders = JSON.parse(localStorage.getItem('local_orders') || '[]');
+        }
+
+        orders.forEach(o => {
+          const id = o.id || o.created_at;
+          const itemsStr = (o.items || []).map(i => `${i.title} (x${i.qty})`).join(', ');
+          el.innerHTML += `
+          <div class="order-card" id="order-${id}">
+            <div class="order-header">
+              <strong style="color: var(--primary); font-size: 1.1rem;">👤 ${o.name || 'مستخدم مجهول'}</strong>
+              <span style="font-weight: 900; color: var(--accent);">${o.total} د.ع</span>
+            </div>
+            
+            <div class="customer-meta">
+              <div class="meta-item"><strong>رقم الهاتف</strong> ${o.phone || 'غير مسجل'}</div>
+              <div class="meta-item"><strong>المحافظة</strong> ${o.city || 'غير محدد'}</div>
+              <div class="meta-item" style="grid-column: span 2;"><strong>العنوان بالكامل</strong> ${o.address || 'لا يوجد تفاصيل'}</div>
+            </div>
+
+            <div class="order-items-list">
+              <strong>📦 العناصر المطلوبة:</strong><br>
+              ${itemsStr || 'لا توجد عناصر'}
+            </div>
+
+            <div style="margin-top: 15px; text-align: left;">
+              <button class="delete-order-btn" onclick="deleteOrder('${id}')">تم التوصيل / حذف الطلب</button>
+            </div>
+          </div>
+        `;
+        });
+      }
+
+      async function deleteOrder(id) {
+        if (!confirm('هل أنت متأكد من حذف هذا الطلب؟')) return;
+
+        if (window.supabase) {
+          const { error } = await supabase.from('orders').delete().eq('id', id);
+          if (error) return alert('فشل المسح من السيرفر');
+        } else {
+          const orders = JSON.parse(localStorage.getItem('local_orders') || '[]');
+          const filtered = orders.filter(o => String(o.id) !== String(id));
+          localStorage.setItem('local_orders', JSON.stringify(filtered));
+        }
+
+        loadOrders();
+      }
+
+      loadOrders();
+
+      // 🚪 تسجيل خروج
+      async function logout() {
+        if (window.supabase) {
+          await supabase.auth.signOut();
+        }
+        window.location.href = "cohee.html";
+      }
+    </script>
+
+    <section class="admin-panel"
+      style="background: var(--white); padding: 40px; border-radius: 30px; box-shadow: var(--shadow-lg); border: 1px solid rgba(197, 160, 33, 0.1);">
+      <h2 style="color: var(--primary); margin-bottom: 30px;">🎁 إضافة منتج جديد</h2>
+      <form id="addSticker" onsubmit="addSticker(event)" style="display: grid; gap: 20px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <input id="st_title" placeholder="عنوان المنتج" required
+            style="padding: 15px; border-radius: 12px; border: 1px solid #eee; font-family: inherit;">
+          <input id="st_price" placeholder="السعر (د.ع)" type="number" required
+            style="padding: 15px; border-radius: 12px; border: 1px solid #eee; font-family: inherit;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <input id="st_category" placeholder="التصنيف (توزيعات، مصاحف...)"
+            style="padding: 15px; border-radius: 12px; border: 1px solid #eee; font-family: inherit;">
+          <div style="display: flex; align-items: center; gap: 10px; padding: 0 15px;">
+            <input id="st_active" type="checkbox" checked
+              style="width: 20px; height: 20px; accent-color: var(--primary);">
+            <label for="st_active" style="font-weight: 600;">المنتج مفعل ويظهر في المتجر</label>
+          </div>
+        </div>
+
+        <div
+          style="padding: 20px; background: var(--bg); border: 1px dashed var(--accent); border-radius: 15px; text-align: center;">
+          <label style="display: block; margin-bottom: 10px; font-weight: 700; color: var(--primary);">صورة المنتج
+            الفاخرة</label>
+          <input id="st_image" type="file" accept="image/*" style="cursor: pointer;">
+          <div id="previewWrap" style="margin-top:15px;display:none">
+            <img id="previewImg" src=""
+              style="max-width:150px; border-radius:15px; display:inline-block; margin-bottom:10px; box-shadow: var(--shadow-sm);">
+            <progress id="uploadProgress" value="0" max="100" style="width:100%; height: 10px; border-radius: 5px;"
+              hidden></progress>
+          </div>
+        </div>
+
+        <button
+          style="background: var(--primary); color: #fff; padding: 18px; border: none; border-radius: 15px; font-weight: 900; font-size: 1.1rem; cursor: pointer; transition: var(--transition);">إضافة
+          المنتج للمخزن الملكي</button>
+      </form>
+
+      <h3 style="margin: 40px 0 20px; color: var(--primary); border-top: 2px solid var(--bg); padding-top: 40px;">📋
+        قائمة المنتجات الحالية</h3>
+      <div id="stList" style="display: grid; gap: 15px;"></div>
+    </section>
+  </main>
+
+  <script>
+    async function loadStickers() {
+      const el = document.getElementById('stList');
+      el.innerHTML = '';
+      if (window.supabase) {
+        const { data, error } = await supabase
+          .from('stickers')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (data) data.forEach(s => { el.innerHTML += renderStickerRow(s); });
+      } else {
+        const data = JSON.parse(localStorage.getItem('stickers_local') || '[]');
+        data.forEach(s => { el.innerHTML += renderStickerRow(s); });
+      }
+    }
+
+    function renderStickerRow(s) {
+      const id = s.id ?? s.title;
+      const thumb = s.image_url ? `<img src="${s.image_url}" style="height:48px;width:48px;object-fit:cover;border-radius:6px;margin-inline-start:8px">` : '';
+      const category = s.category ? `<div style="font-size:12px;color:var(--muted)">فئة: ${s.category}</div>` : '';
+      // view row + hidden edit form
+      return `
+  <div id="st-row-${id}" class="st-row">
+    <div style="display:flex;align-items:center">
+      ${thumb}
+      <div>
+        <div class="st-info">${s.title} — ${s.price} د.ع</div>
+        ${category}
+      </div>
+    </div>
+    <span class="st-actions">
+      <button onclick="showEditForm('${id}')">تعديل</button>
+      <button onclick="deleteSticker('${id}')">حذف</button>
+    </span>
+    <div id="st-edit-${id}" style="display:none;margin-top:8px;padding:8px;background:#fafafa;border-radius:6px">
+      <input id="edit_title_${id}" value="${escapeHtml(s.title)}">
+      <input id="edit_price_${id}" value="${s.price}">
+      <input id="edit_category_${id}" value="${escapeHtml(s.category || '')}">
+      <div style="margin-top:6px">
+        <button onclick="saveStickerEdit('${id}')">حفظ</button>
+        <button onclick="cancelStickerEdit('${id}')">إلغاء</button>
+      </div>
+    </div>
+  </div>`;
+    }
+
+    function escapeHtml(str) { if (!str) return ''; return String(str).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;'); }
+
+    function showEditForm(id) {
+      const row = document.getElementById(`st-row-${id}`);
+      if (!row) return;
+      const form = document.getElementById(`st-edit-${id}`);
+      if (form) form.style.display = 'block';
+    }
+
+    function cancelStickerEdit(id) {
+      const form = document.getElementById(`st-edit-${id}`);
+      if (form) form.style.display = 'none';
+    }
+
+    async function saveStickerEdit(id) {
+      const title = document.getElementById(`edit_title_${id}`).value;
+      const price = parseFloat(document.getElementById(`edit_price_${id}`).value) || 0;
+      const category = document.getElementById(`edit_category_${id}`).value || '';
+
+      if (window.supabase) {
+        await supabase.from('stickers').update({ title, price, category }).eq('id', id);
+      } else {
+        const arr = JSON.parse(localStorage.getItem('stickers_local') || '[]');
+        const idx = arr.findIndex(x => String(x.id) === String(id));
+        if (idx > -1) { arr[idx].title = title; arr[idx].price = price; arr[idx].category = category; localStorage.setItem('stickers_local', JSON.stringify(arr)); }
+      }
+      loadStickers();
+    }
+
+    async function seedSampleData() {
+      if (!window.supabase) return alert('Supabase غير متوفر للمزاينة');
+      if (!confirm('سيتم رفع كافة المنتجات الافتراضية إلى قاعدة البيانات. هل أنت متأكد؟')) return;
+
+      const samples = window._sampleProducts || [];
+      const cleanSamples = samples.map(s => ({
+        title: s.title,
+        price: s.price,
+        category: s.category,
+        image_url: s.thumb,
+        active: true
+      }));
+
+      const { error } = await supabase.from('stickers').insert(cleanSamples);
+      if (error) {
+        console.error(error);
+        alert('فشل رفع البيانات');
+      } else {
+        alert('تمت المزامنة بنجاح! جميع المنتجات الملكية جاهزة الآن.');
+        loadStickers();
+      }
+    }
+
+    async function addSticker(e) {
+      e.preventDefault();
+      const title = document.getElementById('st_title').value;
+      const price = parseFloat(document.getElementById('st_price').value);
+      const active = document.getElementById('st_active').checked;
+      const category = document.getElementById('st_category').value || '';
+      const fileInput = document.getElementById('st_image');
+      const file = fileInput && fileInput.files && fileInput.files[0];
+      let image_url = '';
+
+      if (file) {
+        // If supabase storage is available, try upload
+        if (window.supabase && supabase.storage) {
+          try {
+            const filename = `stickers/${Date.now()}_${file.name}`;
+            const prog = document.getElementById('uploadProgress');
+            prog.hidden = false; prog.value = 5;
+
+            await supabase.storage.from('stickers').upload(filename, file, { upsert: true });
+            prog.value = 80;
+
+            const { data } = supabase.storage.from('stickers').getPublicUrl(filename);
+            if (data && data.publicUrl) image_url = data.publicUrl;
+            prog.value = 100; prog.hidden = true;
+          } catch (e) {
+            console.warn('upload failed, will store image as dataURL locally', e);
+          }
+        }
+
+        // fallback: read file as data URL
+        if (!image_url) {
+          image_url = await new Promise((res, rej) => {
+            const r = new FileReader();
+            r.onload = () => res(r.result);
+            r.onerror = rej;
+            r.readAsDataURL(file);
+          });
+        }
+      }
+
+      if (window.supabase) {
+        await supabase.from('stickers').insert([{ title, price, active, image_url, category }]);
+      } else {
+        const existing = JSON.parse(localStorage.getItem('stickers_local') || '[]');
+        existing.unshift({ id: Date.now(), title, price, active, image_url, category });
+        localStorage.setItem('stickers_local', JSON.stringify(existing));
+      }
+      document.getElementById('addSticker').reset();
+      loadStickers();
+    }
+  </script>
+
+  <script>
+    // Admin edit/delete support (works with Supabase or localStorage)
+    async function editSticker(id) {
+      let title = prompt('العنوان الجديد');
+      if (title === null) return;
+      let price = prompt('السعر الجديد');
+      if (price === null) return;
+      price = parseFloat(price);
+      if (window.supabase) {
+        await supabase.from('stickers').update({ title, price }).eq('id', id);
+      } else {
+        const arr = JSON.parse(localStorage.getItem('stickers_local') || '[]');
+        const idx = arr.findIndex(x => String(x.id) === String(id));
+        if (idx > -1) { arr[idx].title = title; arr[idx].price = price; localStorage.setItem('stickers_local', JSON.stringify(arr)); }
+      }
+      loadStickers();
+    }
+
+    async function deleteSticker(id) {
+      if (!confirm('هل تريد حذف الملصق؟')) return;
+      if (window.supabase) {
+        await supabase.from('stickers').delete().eq('id', id);
+      } else {
+        const arr = JSON.parse(localStorage.getItem('stickers_local') || '[]');
+        const filtered = arr.filter(x => String(x.id) !== String(id));
+        localStorage.setItem('stickers_local', JSON.stringify(filtered));
+      }
+      loadStickers();
+    }
+  </script>
+
+  <script>
+    // Show offline notice when Supabase is not available
+    document.addEventListener('DOMContentLoaded', () => {
+      const notice = document.getElementById('offlineNotice');
+      if (!window.supabase) {
+        notice.style.display = 'block';
+      } else {
+        notice.style.display = 'none';
+      }
+      // preview selected image
+      const stImage = document.getElementById('st_image');
+      if (stImage) stImage.addEventListener('change', (e) => {
+        const f = e.target.files && e.target.files[0];
+        const wrap = document.getElementById('previewWrap');
+        const img = document.getElementById('previewImg');
+        if (!f) { wrap.style.display = 'none'; img.src = ''; return; }
+        const reader = new FileReader();
+        reader.onload = () => { img.src = reader.result; wrap.style.display = 'block'; };
+        reader.readAsDataURL(f);
+      });
+    });
+  </script>
+
+</body>
+
+</html>

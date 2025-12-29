@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>تسجيل الدخول</title>
+</head>
+<body>
+
+
+<div id="offlineNotice" style="padding:8px;background:#fff3cd;color:#856404;display:none;text-align:center">وضع عدم الاتصال: Supabase غير مهيأ — العمل في الوضع المحلي</div>
+
+<nav>
+  <a href="cohee.html">الرئيسية</a> |
+  <a href="auth.html">تسجيل دخول</a> |
+  <a href="admin.html">لوحة التحكم</a>
+</nav>
+
+<h2>🔐 تسجيل دخول الموظفين</h2>
+
+<form onsubmit="login(event)">
+  <input id="email" type="email" placeholder="email" required><br>
+  <input id="password" type="password" placeholder="password" required><br>
+  <button>تسجيل الدخول</button>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
+<script src="supabase.js"></script>
+<script>
+async function login(e) {
+  e.preventDefault();
+
+  if (!window.supabase) {
+    alert("❌ Supabase غير مهيأ — لا يمكن تسجيل الدخول");
+    return;
+  }
+
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    alert("❌ فشل تسجيل الدخول: " + error.message);
+  } else {
+    // بعد تسجيل الدخول انتقل إلى لوحة التحكم
+    window.location.href = "admin.html";
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const notice = document.getElementById('offlineNotice');
+  if (!window.supabase) notice.style.display = 'block';
+});
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="utf-8">
+  <title>تفاصيل المنتج</title>
+  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+
+<body>
+  <div id="offlineNotice" style="padding:8px;background:#fff3cd;color:#856404;display:none;text-align:center">وضع عدم
+    الاتصال: Supabase غير مهيأ — العمل في الوضع المحلي</div>
+
+  <div class="container">
+    <a href="cohee.html"
+      style="color: var(--primary); font-weight: 700; text-decoration: none; display: inline-block; margin-bottom: 20px;">←
+      العودة إلى المتجر</a>
+    <section id="productDetail"
+      style="background: #fff; padding: 40px; border-radius: 30px; box-shadow: var(--shadow); border: 1px solid rgba(212, 175, 55, 0.1);">
+      <h2 id="p_title" style="color: var(--primary); font-size: 2rem; font-weight: 900; margin-bottom: 20px;">...</h2>
+      <img id="p_image" src="" alt=""
+        style="max-width:400px; width:100%; height:auto; border-radius:20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); margin-bottom: 30px;">
+      <p id="p_price" style="color: var(--accent); font-size: 1.8rem; font-weight: 900; margin-bottom: 15px;">...</p>
+      <p id="p_desc" style="color: var(--muted); font-size: 1.1rem; line-height: 1.8; margin-bottom: 30px;">وصف تجريبي—
+        غريم توفر لك أرقى الهدايا والتوزيعات الدينية المصممة يدوياً وبكل حب لتناسب مناسباتكم السعيدة.</p>
+      <button id="buyBtn"
+        style="background: var(--primary); color: #fff; padding: 15px 40px; border: 0; border-radius: 50px; font-weight: 700; font-size: 1.1rem; cursor: pointer; box-shadow: 0 5px 15px rgba(45, 90, 39, 0.2);">طلب
+        نسخة الآن</button>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
+  <script src="supabase.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const notice = document.getElementById('offlineNotice');
+      if (!window.supabase) notice.style.display = 'block';
+      loadProduct();
+    });
+
+    function qs(name) { const m = new URLSearchParams(location.search); return m.get(name); }
+    async function loadProduct() {
+      const id = qs('id');
+      if (!id) return document.getElementById('p_title').textContent = 'خطأ: المعرف مفقود';
+
+      // try supabase
+      if (window.supabase) {
+        try {
+          const { data } = await supabase.from('stickers').select('*').eq('id', id).single();
+          if (data) return render(data);
+        } catch (e) { }
+      }
+
+      // fallback local
+      const local = JSON.parse(localStorage.getItem('stickers_local') || '[]');
+      const p = local.find(x => String(x.id) === String(id));
+      if (p) render(p); else document.getElementById('p_title').textContent = 'المنتج غير موجود';
+    }
+
+    function render(p) {
+      document.getElementById('p_title').textContent = p.title;
+      document.getElementById('p_price').textContent = (p.price || 0) + ' د.ع';
+      document.getElementById('p_image').src = p.image_url || p.thumb || 'https://via.placeholder.com/400x300?text=Sticker';
+      document.getElementById('buyBtn').onclick = async () => {
+        const name = prompt('الرجاء إدخال اسمك لإتمام الطلب:');
+        if (!name) return;
+
+        const cart = [{ id: p.id, title: p.title, price: p.price, qty: 1 }];
+        const total = p.price || 0;
+        if (window.supabase) {
+          await supabase.from('orders').insert([{ items: cart, total, name }]);
+          alert('تم إنشاء الطلب بنجاح ✅');
+        } else {
+          const ord = JSON.parse(localStorage.getItem('local_orders') || '[]');
+          ord.unshift({ id: Date.now(), items: cart, total, name });
+          localStorage.setItem('local_orders', JSON.stringify(ord));
+          alert('تم إنشاء طلب تجريبي محلي');
+        }
+      };
+    }
+
+  </script>
+</body>
+
+</html>
