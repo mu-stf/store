@@ -27,6 +27,8 @@ async function loadProducts() {
   if (root) root.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--primary); width:100%;"><i class="fa-solid fa-circle-notch fa-spin"></i> جارٍ تحميل متجر غريم...</div>';
 
   let products = sampleProducts;
+  
+  // Try to load from Supabase first
   if (window.supabase) {
     try {
       const { data } = await supabase.from('stickers').select('*').eq('active', true);
@@ -38,6 +40,12 @@ async function loadProducts() {
         }));
       }
     } catch (e) { console.warn('Supabase offline, using samples'); }
+  }
+  
+  // Always ensure stickers_local is populated with sample products for offline access
+  const localStickers = JSON.parse(localStorage.getItem('stickers_local') || '[]');
+  if (!localStickers.length) {
+    localStorage.setItem('stickers_local', JSON.stringify(sampleProducts));
   }
 
   window._allProducts = products;
@@ -78,6 +86,11 @@ function renderProducts(items) {
       const qty = parseInt(qtyInput.value) || 1;
       addToCart(p, qty);
     };
+    
+    // Detail link handler
+    const detailLink = node.querySelector('.detailLink');
+    detailLink.href = `product.html?id=${encodeURIComponent(p.id)}`;
+
     root.appendChild(node);
   });
 
