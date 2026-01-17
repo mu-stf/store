@@ -60,9 +60,28 @@
 
     function render(p) {
       document.getElementById('p_title').textContent = p.title;
-      document.getElementById('p_price').textContent = (p.price || 0) + ' د.ع';
-      document.getElementById('p_image').src = p.image_url || p.thumb || 'https://via.placeholder.com/400x300?text=Sticker';
-      document.getElementById('buyBtn').onclick = async () => {
+      document.getElementById('p_price').textContent = (p.price || 0).toLocaleString('ar-IQ') + ' د.ع';
+      document.getElementById('p_image').src = p.image_url || p.thumb || 'https://via.placeholder.com/400x300?text=Gharim';
+
+      // Update description from DB
+      const descEl = document.getElementById('p_desc');
+      if (p.description) {
+        descEl.textContent = p.description;
+      }
+
+      // Check Inventory
+      const quantity = p.quantity ?? 100; // Default 100 for old products
+      const buyBtn = document.getElementById('buyBtn');
+
+      if (quantity === 0) {
+        buyBtn.textContent = 'نفذ المخزون 📦';
+        buyBtn.disabled = true;
+        buyBtn.style.background = '#cccccc';
+        buyBtn.style.cursor = 'not-allowed';
+      }
+
+      buyBtn.onclick = async () => {
+        if (quantity === 0) return;
         const name = prompt('الرجاء إدخال اسمك لإتمام الطلب:');
         if (!name) return;
 
