@@ -1,61 +1,241 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
+
 <head>
   <meta charset="utf-8">
-  <title>تسجيل الدخول</title>
+  <title>تسجيل الدخول — الموظفين</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1e293b;
+      --accent: #d4af37;
+      --bg-color: #f8fafc;
+      --card-bg: #fff;
+      --text-main: #334155;
+      --text-muted: #64748b;
+      --input-border: #e2e8f0;
+      --input-focus: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background-color: var(--bg-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: var(--text-main);
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 420px;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+
+    .icon-wrapper {
+      margin-bottom: 25px;
+    }
+
+    .icon-wrapper .lock-icon {
+      width: 80px;
+      height: 80px;
+      background: #fefce8;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fbbf24;
+      font-size: 2.5rem;
+      border: 2px solid #fef3c7;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #1e293b;
+      margin-bottom: 10px;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #1e293b;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid var(--input-border);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 0.3s;
+      outline: none;
+      background-color: #fff;
+    }
+
+    .form-group input:focus {
+      border-color: var(--input-focus);
+      background-color: #fff;
+      box-shadow: 0 0 0 4px rgba(30, 41, 59, 0.05);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      background-color: #526077;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+      font-family: inherit;
+    }
+
+    .login-btn:hover {
+      background-color: #1e293b;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 25px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .back-btn:hover {
+      color: var(--primary);
+    }
+
+    #offlineNotice {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fefce8;
+      border: 1px solid #fef3c7;
+      color: #854d0e;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      display: none;
+      z-index: 100;
+    }
+  </style>
 </head>
+
 <body>
 
+  <div id="offlineNotice"><i class="fa-solid fa-triangle-exclamation"></i> وضع عدم الاتصال: الرجاء تشغيل الخادم المحلي
+  </div>
 
-<div id="offlineNotice" style="padding:8px;background:#fff3cd;color:#856404;display:none;text-align:center">وضع عدم الاتصال: Supabase غير مهيأ — العمل في الوضع المحلي</div>
+  <div class="login-card">
+    <div class="icon-wrapper">
+      <div class="lock-icon">
+        <i class="fa-solid fa-lock"></i>
+      </div>
+    </div>
 
-<nav>
-  <a href="cohee.html">الرئيسية</a> |
-  <a href="auth.html">تسجيل دخول</a> |
-  <a href="admin.html">لوحة التحكم</a>
-</nav>
+    <h1>تسجيل دخول الموظفين</h1>
+    <p class="subtitle">الرجاء إدخال بيانات الدخول</p>
 
-<h2>🔐 تسجيل دخول الموظفين</h2>
+    <form onsubmit="login(event)">
+      <div class="form-group">
+        <label>اسم المستخدم (البريد الإلكتروني)</label>
+        <input id="email" type="email" placeholder="أدخل البريد الإلكتروني" required>
+      </div>
 
-<form onsubmit="login(event)">
-  <input id="email" type="email" placeholder="email" required><br>
-  <input id="password" type="password" placeholder="password" required><br>
-  <button>تسجيل الدخول</button>
-</form>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <input id="password" type="password" placeholder="أدخل كلمة المرور" required>
+      </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
-<script src="supabase.js"></script>
-<script>
-async function login(e) {
-  e.preventDefault();
+      <button type="submit" class="login-btn">تسجيل الدخول</button>
+    </form>
 
-  if (!window.supabase) {
-    alert("❌ Supabase غير مهيأ — لا يمكن تسجيل الدخول");
-    return;
-  }
+    <a href="index.html" class="back-btn">← العودة للمتجر</a>
+  </div>
 
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script>
+    async function login(e) {
+      e.preventDefault();
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  });
+      if (!window.supabase) {
+        alert("❌ Supabase غير مهيأ — الرجاء تشغيل الخادم المحلي (http://localhost:5500)");
+        return;
+      }
 
-  if (error) {
-    alert("❌ فشل تسجيل الدخول: " + error.message);
-  } else {
-    // بعد تسجيل الدخول انتقل إلى لوحة التحكم
-    window.location.href = "admin.html";
-  }
-}
+      const btn = e.target.querySelector('button');
+      const originalText = btn.textContent;
+      btn.textContent = 'جاري التحقق...';
+      btn.disabled = true;
 
-document.addEventListener('DOMContentLoaded', () => {
-  const notice = document.getElementById('offlineNotice');
-  if (!window.supabase) notice.style.display = 'block';
-});
-</script>
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) {
+          alert("❌ فشل تسجيل الدخول: " + error.message);
+        } else {
+          window.location.href = "admin.html";
+        }
+      } catch (err) {
+        alert("❌ حدث خطأ غير متوقع");
+      } finally {
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const notice = document.getElementById('offlineNotice');
+      if (!window.supabase || window.location.protocol === 'file:') {
+        notice.style.display = 'block';
+      }
+    });
+  </script>
 
 </body>
-</html>
 
+</html>
