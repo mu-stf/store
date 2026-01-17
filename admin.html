@@ -219,7 +219,7 @@
     <div class="container">
       <h1 class="logo">GHARIM — غريم</h1>
       <nav class="main-nav">
-        <a href="cohee.html">الرئيسية</a>
+        <a href="index.html">الرئيسية</a>
         <button id="logoutBtn" onclick="logout()"
           style="background: none; border: none; color: var(--text); font-weight: 600; cursor: pointer; font-family: inherit; display: none;">تسجيل
           الخروج</button>
@@ -583,7 +583,7 @@
       if (window.supabase) {
         await window.supabase.auth.signOut();
       }
-      window.location.href = 'cohee.html';
+      window.location.href = 'index.html';
     }
 
     // Load orders
