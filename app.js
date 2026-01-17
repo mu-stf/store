@@ -36,7 +36,9 @@ async function loadProducts() {
         products = data.map(p => ({
           id: p.id, title: p.title, price: p.price,
           thumb: p.image_url || 'https://via.placeholder.com/400?text=Gharim',
-          category: p.category || ''
+          category: p.category || '',
+          quantity: p.quantity ?? 0, // Include quantity
+          description: p.description || '' // Include description
         }));
       }
     } catch (e) { console.warn('Supabase offline, using samples'); }
@@ -74,6 +76,19 @@ function renderProducts(items) {
     node.querySelector('.title').textContent = p.title;
     node.querySelector('.price').textContent = `${p.price.toLocaleString()} د.ع`;
 
+    // Check if product is out of stock
+    const quantity = p.quantity ?? 100; // Default to 100 if not set (for old products)
+    const addBtn = node.querySelector('.addBtn');
+    
+    if (quantity === 0) {
+      // Product is out of stock
+      addBtn.textContent = 'نفذ المخزون 📦';
+      addBtn.disabled = true;
+      addBtn.style.background = '#cccccc';
+      addBtn.style.cursor = 'not-allowed';
+      addBtn.style.opacity = '0.6';
+    }
+
     // Quantity Controls Logic
     const qtyInput = node.querySelector('.qty-input');
     const plus = node.querySelector('.plus');
@@ -82,10 +97,12 @@ function renderProducts(items) {
     plus.onclick = () => { qtyInput.value = parseInt(qtyInput.value) + 1; };
     minus.onclick = () => { if (parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1; };
 
-    node.querySelector('.addBtn').onclick = () => {
-      const qty = parseInt(qtyInput.value) || 1;
-      addToCart(p, qty);
-    };
+    if (quantity > 0) {
+      addBtn.onclick = () => {
+        const qty = parseInt(qtyInput.value) || 1;
+        addToCart(p, qty);
+      };
+    }
     
     // Detail link handler
     const detailLink = node.querySelector('.detailLink');
