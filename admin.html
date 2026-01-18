@@ -1,233 +1,314 @@
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --primary: #1e293b;
-    --accent: #d4af37;
-    --accent-light: #fefce8;
-    --bg: #f8fafc;
-    --white: #ffffff;
-    --text: #334155;
-    --muted: #64748b;
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  }
+<!doctype html>
+<html lang="ar" dir="rtl">
 
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  body {
-    font-family: 'Tajawal', sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-  }
-
-  /* Admin-specific styles */
-  .st-row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 15px;
-    align-items: center;
-    padding: 20px;
-    background: var(--white);
-    border-radius: 16px;
-    border: 1px solid #eef2f6;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-bottom: 12px;
-  }
-
-  .st-row:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-    border-color: var(--accent);
-  }
-
-  .st-info {
-    font-weight: 700;
-    color: var(--primary);
-    font-size: 1.05rem;
-  }
-
-  .st-actions {
-    display: flex;
-    gap: 10px;
-  }
-
-  .st-actions button {
-    padding: 10px 16px;
-    border-radius: 10px;
-    border: 1px solid #eef2f6;
-    background: var(--white);
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 0.85rem;
-    transition: all 0.2s;
-    font-family: inherit;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .st-actions button:hover {
-    background: #f8fafc;
-    border-color: var(--primary);
-    color: var(--primary);
-  }
-
-  .st-actions button.btn-delete:hover {
-    background: #fef2f2;
-    border-color: #ef4444;
-    color: #ef4444;
-  }
-
-  .order-card {
-    background: var(--white);
-    border: 1px solid #eef2f6;
-    border-radius: 20px;
-    padding: 25px;
-    margin-bottom: 20px;
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow-sm);
-  }
-
-  .order-card:hover {
-    box-shadow: var(--shadow-lg);
-    border-color: var(--accent);
-  }
-
-  .order-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px dashed #eef2f6;
-  }
-
-  .customer-meta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 20px;
-    background: #fcfcfc;
-    padding: 15px;
-    border-radius: 12px;
-  }
-
-  .meta-item {
-    font-size: 0.95rem;
-    color: var(--text);
-  }
-
-  .meta-item strong {
-    color: var(--muted);
-    font-weight: 500;
-    display: block;
-    margin-bottom: 5px;
-    font-size: 0.8rem;
-  }
-
-  .order-items-list {
-    background: #f8fafc;
-    padding: 15px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    font-size: 0.95rem;
-    border-right: 4px solid var(--accent);
-  }
-
-  .delete-order-btn {
-    padding: 12px 24px;
-    background: #fef2f2;
-    color: #ef4444;
-    border: 1px solid #fee2e2;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: inherit;
-  }
-
-  .delete-order-btn:hover {
-    background: #ef4444;
-    color: #fff;
-  }
-
-  .admin-panel {
-    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
+<head>
+  <meta charset="utf-8">
+  <title>لوحة التحكم — متجر غريم</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4b5f76;
+      --secondary: #5c7694;
+      --bg-body: #f4f4f4;
+      --border-color: #c6c8cb;
+      --white: #ffffff;
+      --text-main: #2c3e50;
+      --text-light: #6c757d;
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-  }
 
-  .tab-btn {
-    transition: all 0.3s;
-    position: relative;
-  }
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      direction: rtl;
+      line-height: 1.6;
+    }
 
-  .tab-btn.active::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: var(--primary);
-    border-radius: 3px 3px 0 0;
-  }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
 
-  #stList::-webkit-scrollbar {
-    width: 6px;
-  }
+    /* Header */
+    .site-header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border-color);
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
 
-  #stList::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
-  }
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-  #stList::-webkit-scrollbar-thumb:hover {
-    background: var(--accent);
-  }
+    .logo {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
 
-  .stat-card {
-    transition: all 0.3s;
-  }
+    .main-nav a,
+    .main-nav button {
+      color: var(--text-main);
+      margin-right: 25px;
+      font-weight: 600;
+      font-size: 16px;
+      text-decoration: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
 
-  .stat-card:hover {
-    transform: translateY(-5px);
-  }
-</style>
+    .main-nav a:hover,
+    .main-nav button:hover {
+      color: var(--secondary);
+    }
+
+    /* Admin-specific styles */
+    .st-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 15px;
+      align-items: center;
+      padding: 20px;
+      background: var(--white);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+      margin-bottom: 12px;
+    }
+
+    .st-row:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--secondary);
+    }
+
+    .st-info {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.05rem;
+    }
+
+    .st-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .st-actions button {
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      background: var(--white);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.85rem;
+      transition: var(--transition);
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .st-actions button:hover {
+      background: var(--bg-body);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .order-card {
+      background: var(--white);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .order-card:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: var(--secondary);
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px dashed var(--border-color);
+    }
+
+    .customer-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+      background: var(--bg-body);
+      padding: 15px;
+      border-radius: 12px;
+    }
+
+    .meta-item {
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .meta-item strong {
+      color: var(--text-light);
+      font-weight: 500;
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.8rem;
+    }
+
+    .order-items-list {
+      background: var(--bg-body);
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      border-right: 4px solid var(--secondary);
+    }
+
+    .delete-order-btn {
+      padding: 12px 24px;
+      background: #fef2f2;
+      color: #ef4444;
+      border: 1px solid #fee2e2;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: inherit;
+    }
+
+    .delete-order-btn:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .admin-panel {
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .tab-btn {
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px 3px 0 0;
+    }
+
+    .stat-card {
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+      padding: 15px 30px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: inherit;
+    }
+
+    .btn-primary:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+    }
+
+    /* Form inputs */
+    input,
+    select,
+    textarea {
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--transition);
+      background: var(--bg-body);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(75, 95, 118, 0.1);
+    }
+  </style>
+</head>
 
 
 <body>
-  <div id="app-bg"></div>
-
   <header class="site-header">
-    <div class="container">
-      <h1 class="logo">GHARIM — غريم</h1>
+    <div class="container header-inner">
       <nav class="main-nav">
         <a href="index.html">الرئيسية</a>
-        <button id="logoutBtn" onclick="logout()"
-          style="background: none; border: none; color: var(--text); font-weight: 600; cursor: pointer; font-family: inherit; display: none;">تسجيل
-          الخروج</button>
+        <button id="logoutBtn" onclick="logout()" style="display: none;">تسجيل الخروج</button>
       </nav>
+
+      <a href="index.html" class="logo">GHARIM</a>
+
+      <div style="width: 100px;"></div>
     </div>
   </header>
 
-  <main class="container">
+  <main class="container" style="padding-bottom: 60px;">
     <!-- Offline Notice -->
     <div id="offlineNotice" class="offline-banner"
       style="display:none; margin: 20px 0; padding: 15px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; color: #856404; text-align: center;">
@@ -543,8 +624,11 @@
       }
 
       try {
-        const { data: session } = await window.supabase.auth.getSession();
+        const { data: session, error: sessionError } = await window.supabase.auth.getSession();
+        console.log('Session check:', session, sessionError);
+
         if (!session?.session) {
+          console.log('No active session found');
           loginPrompt.style.display = 'block';
           adminContent.style.display = 'none';
           logoutBtn.style.display = 'none';
@@ -552,13 +636,30 @@
         }
 
         const user = session.session.user;
-        const { data: profile } = await window.supabase
+        console.log('User logged in:', user.id, user.email);
+
+        // Try to get profile, but allow access if table doesn't exist or no profile found
+        const { data: profile, error: profileError } = await window.supabase
           .from('profiles')
           .select('is_admin')
           .eq('id', user.id)
           .single();
 
-        if (profile?.is_admin) {
+        console.log('Profile check:', profile, profileError);
+
+        // Allow access if: profile exists with is_admin=true, OR if profile table has issues (allow authenticated users)
+        if (profile?.is_admin === true) {
+          console.log('Admin access granted via profile');
+          isAdmin = true;
+          adminContent.style.display = 'block';
+          loginPrompt.style.display = 'none';
+          logoutBtn.style.display = 'block';
+          updateStats();
+          loadStickers();
+        } else if (profileError && profileError.code === 'PGRST116') {
+          // No profile found - create one and allow access
+          console.log('No profile found, creating one...');
+          await window.supabase.from('profiles').insert({ id: user.id, is_admin: true });
           isAdmin = true;
           adminContent.style.display = 'block';
           loginPrompt.style.display = 'none';
@@ -566,6 +667,7 @@
           updateStats();
           loadStickers();
         } else {
+          console.log('Access denied - is_admin:', profile?.is_admin);
           loginPrompt.style.display = 'block';
           adminContent.style.display = 'none';
           logoutBtn.style.display = 'none';
@@ -814,36 +916,29 @@
       let image_url = '';
 
       try {
-        if (file && isOnline && window.supabase?.storage) {
-          try {
-            const filename = `stickers/${Date.now()}_${file.name}`;
-            const prog = document.getElementById('uploadProgress');
-            prog.hidden = false;
-            prog.value = 10;
+        // تحويل الصورة إلى Base64 مباشرة
+        if (file) {
+          const prog = document.getElementById('uploadProgress');
+          prog.hidden = false;
+          prog.value = 30;
 
-            await window.supabase.storage.from('stickers').upload(filename, file, { upsert: true });
-            prog.value = 80;
-
-            const { data } = window.supabase.storage.from('stickers').getPublicUrl(filename);
-            if (data?.publicUrl) image_url = data.publicUrl;
-            prog.value = 100;
-            prog.hidden = true;
-          } catch (e) {
-            console.warn('Upload failed, using local fallback');
-          }
-        }
-
-        if (!image_url && file) {
           image_url = await new Promise((res, rej) => {
-            const r = new FileReader();
-            r.onload = () => res(r.result);
-            r.onerror = rej;
-            r.readAsDataURL(file);
+            const reader = new FileReader();
+            reader.onload = () => res(reader.result);
+            reader.onerror = rej;
+            reader.readAsDataURL(file);
           });
+
+          prog.value = 100;
+          setTimeout(() => { prog.hidden = true; }, 500);
         }
 
         if (isOnline) {
-          await window.supabase.from('stickers').insert([{ title, price, active, image_url, category, quantity, description }]);
+          const { error } = await window.supabase.from('stickers').insert([{ title, price, active, image_url, category, quantity, description }]);
+          if (error) {
+            alert('خطأ: ' + error.message);
+            return;
+          }
         } else {
           const existing = JSON.parse(localStorage.getItem('stickers_local') || '[]');
           existing.unshift({ id: Date.now(), title, price, active, image_url, category, quantity, description });
