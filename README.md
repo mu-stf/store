@@ -20,7 +20,7 @@ Security note: never commit your Stripe secret key. Use environment variables on
 
 هذه نسخة مبسطة لمتجر ملصقات statically-served. التغييرات الأساسية:
 
-- `cohee.html` أصبح واجهة المتجر (قائمة الملصقات، عربة محلية).
+- `index.html` أصبح واجهة المتجر (قائمة الملصقات، عربة محلية).
 - `auth.html` صفحة تسجيل الدخول (Supabase auth يُستخدم إن توفر).
 - `admin.html` لوحة لإضافة الملصقات (يدعم إدراج بيانات إلى جدول `stickers` عبر Supabase).
 - `styles.css` تصميم RTL عصري.
@@ -35,7 +35,7 @@ cd "c:\Users\mk2uu\OneDrive - AlShaab University\Desktop\edit2"
 python -m http.server 8000
 ```
 
-ثم افتح المتصفح على `http://localhost:8000/cohee.html`.
+ثم افتح المتصفح على `http://localhost:8000/index.html`.
 
 ملاحظات:
 - إذا كنت تستخدم Supabase، ضع ملف `supabase.js` مع تهيئة `supabase` في نفس المجلد، واشتق جدول `stickers` مع الحقول `id`, `title`, `price`, `active`, `image_url`.
@@ -56,7 +56,7 @@ python -m http.server 8000
 Start-Process python -ArgumentList '-m','http.server','8000'
 ```
 
-بعد التهيئة، افتح `http://localhost:8000/cohee.html` لمعاينة المتجر.
+بعد التهيئة، افتح `http://localhost:8000/index.html` لمعاينة المتجر.
 
 المزيد: شملت التعديلات التالية في المشروع:
 

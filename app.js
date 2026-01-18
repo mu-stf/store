@@ -27,7 +27,7 @@ async function loadProducts() {
   if (root) root.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--primary); width:100%;"><i class="fa-solid fa-circle-notch fa-spin"></i> جارٍ تحميل متجر غريم...</div>';
 
   let products = sampleProducts;
-  
+
   // Try to load from Supabase first
   if (window.supabase) {
     try {
@@ -43,7 +43,7 @@ async function loadProducts() {
       }
     } catch (e) { console.warn('Supabase offline, using samples'); }
   }
-  
+
   // Always ensure stickers_local is populated with sample products for offline access
   const localStickers = JSON.parse(localStorage.getItem('stickers_local') || '[]');
   if (!localStickers.length) {
@@ -76,10 +76,14 @@ function renderProducts(items) {
     node.querySelector('.title').textContent = p.title;
     node.querySelector('.price').textContent = `${p.price.toLocaleString()} د.ع`;
 
+    // Set detail link for image
+    const detailLink = node.querySelector('.detailLink');
+    detailLink.href = `product.html?id=${encodeURIComponent(p.id)}`;
+
     // Check if product is out of stock
     const quantity = p.quantity ?? 100; // Default to 100 if not set (for old products)
     const addBtn = node.querySelector('.addBtn');
-    
+
     if (quantity === 0) {
       // Product is out of stock
       addBtn.textContent = 'نفذ المخزون 📦';
@@ -103,10 +107,6 @@ function renderProducts(items) {
         addToCart(p, qty);
       };
     }
-    
-    // Detail link handler
-    const detailLink = node.querySelector('.detailLink');
-    detailLink.href = `product.html?id=${encodeURIComponent(p.id)}`;
 
     root.appendChild(node);
   });
@@ -160,21 +160,26 @@ function showCart() {
   if (!m || !list) return;
 
   if (!c.length) {
-    list.innerHTML = '<p style="text-align:center; padding:20px;">السلة فارغة 🧺</p>';
+    list.innerHTML = '<p style="text-align:center; padding:20px;">العلاگه فارغة 🛍️</p>';
     document.getElementById('clearCartBtn').style.display = 'none';
   } else {
     document.getElementById('clearCartBtn').style.display = 'block';
     const total = c.reduce((s, i) => s + i.price * i.qty, 0);
     list.innerHTML = c.map(i => `
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:10px; border-bottom:1px solid #eee;">
-        <div style="display:flex; align-items:center; gap:10px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:15px; border-bottom:1px solid #eee; background: #f9f9f9; border-radius: 10px;">
+        <div style="display:flex; align-items:center; gap:15px; flex: 1;">
           <button onclick="removeFromCart('${i.id}')" style="background:none; border:none; color:#ff4444; cursor:pointer; font-size:1.1rem;"><i class="fa-solid fa-trash-can"></i></button>
-          <div>
-            <strong style="display:block; color:var(--primary);">${i.title}</strong>
-            <small>${i.qty} قِطعة × ${i.price.toLocaleString()} د.ع</small>
+          <div style="flex: 1;">
+            <strong style="display:block; color:var(--primary); margin-bottom: 5px;">${i.title}</strong>
+            <div style="display: flex; align-items: center; gap: 10px; margin-top: 8px;">
+              <button onclick="updateCartQty('${i.id}', -1)" style="width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border-color); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: bold;">-</button>
+              <span style="min-width: 40px; text-align: center; font-weight: 700; font-size: 16px;">${i.qty}</span>
+              <button onclick="updateCartQty('${i.id}', 1)" style="width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border-color); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: bold;">+</button>
+              <small style="margin-right: 10px; color: var(--text-light);">× ${i.price.toLocaleString()} د.ع</small>
+            </div>
           </div>
         </div>
-        <strong>${(i.price * i.qty).toLocaleString()}</strong>
+        <strong style="color: var(--secondary); font-size: 18px;">${(i.price * i.qty).toLocaleString()}</strong>
       </div>`).join('')
       + `<div style="text-align:center; font-size:1.3rem; padding:20px; font-weight:800; color:var(--primary);">المجموع: ${total.toLocaleString()} د.ع</div>`;
   }
@@ -195,14 +200,30 @@ window.removeFromCart = function (id) {
   c = c.filter(x => x.id !== id);
   saveCart(c);
   showCart();
-  showToast('تم حذف المنتج من السلة 🗑️');
+  showToast('تم حذف المنتج من العلاگه 🗑️');
+};
+
+window.updateCartQty = function (id, delta) {
+  let c = getCart();
+  const item = c.find(x => x.id === id);
+  if (item) {
+    item.qty += delta;
+    if (item.qty <= 0) {
+      c = c.filter(x => x.id !== id);
+      showToast('تم حذف المنتج من العلاگه 🗑️');
+    } else {
+      showToast('تم تحديث الكمية ✅');
+    }
+    saveCart(c);
+    showCart();
+  }
 };
 
 function clearCart() {
-  if (confirm('هل أنت متأكد من رغبتك في تفريغ السلة بالكامل؟')) {
+  if (confirm('هل أنت متأكد من رغبتك في تفريغ العلاگه بالكامل؟')) {
     saveCart([]);
     showCart();
-    showToast('تم تفريغ السلة بالكامل 🧺✨');
+    showToast('تم تفريغ العلاگه بالكامل 🛍️✨');
   }
 }
 
