@@ -6,6 +6,7 @@
   <title>تفاصيل المنتج</title>
   <link rel="stylesheet" href="styles.css">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
@@ -24,9 +25,25 @@
       <p id="p_price" style="color: var(--accent); font-size: 1.8rem; font-weight: 900; margin-bottom: 15px;">...</p>
       <p id="p_desc" style="color: var(--muted); font-size: 1.1rem; line-height: 1.8; margin-bottom: 30px;">وصف تجريبي—
         غريم توفر لك أرقى الهدايا والتوزيعات الدينية المصممة يدوياً وبكل حب لتناسب مناسباتكم السعيدة.</p>
+
+      <!-- Quantity Control -->
+      <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 25px;">
+        <button id="minusBtn"
+          style="width: 45px; height: 45px; border-radius: 12px; border: 2px solid var(--primary); background: #fff; color: var(--primary); cursor: pointer; font-size: 1.3rem; font-weight: 700; transition: all 0.3s ease;">
+          <i class="fa-solid fa-minus"></i>
+        </button>
+        <input type="number" id="qtyInput" value="1" min="1"
+          style="width: 80px; height: 45px; text-align: center; border-radius: 12px; border: 2px solid var(--border-color); font-weight: 700; font-size: 1.2rem; font-family: inherit; -moz-appearance: textfield; appearance: textfield;">
+        <button id="plusBtn"
+          style="width: 45px; height: 45px; border-radius: 12px; border: 2px solid var(--primary); background: #fff; color: var(--primary); cursor: pointer; font-size: 1.3rem; font-weight: 700; transition: all 0.3s ease;">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+
       <button id="buyBtn"
-        style="background: var(--primary); color: #fff; padding: 15px 40px; border: 0; border-radius: 50px; font-weight: 700; font-size: 1.1rem; cursor: pointer; box-shadow: 0 5px 15px rgba(45, 90, 39, 0.2);">طلب
-        نسخة الآن</button>
+        style="background: var(--primary); color: #fff; padding: 15px 40px; border: 0; border-radius: 50px; font-weight: 700; font-size: 1.1rem; cursor: pointer; box-shadow: 0 5px 15px rgba(45, 90, 39, 0.2);">
+        <i class="fa-solid fa-cart-plus"></i> إضافة للعلاگه
+      </button>
     </section>
   </div>
 
@@ -74,30 +91,61 @@
       const buyBtn = document.getElementById('buyBtn');
 
       if (quantity === 0) {
-        buyBtn.textContent = 'نفذ المخزون 📦';
+        buyBtn.innerHTML = '<i class="fa-solid fa-box"></i> نفذ المخزون';
         buyBtn.disabled = true;
         buyBtn.style.background = '#cccccc';
         buyBtn.style.cursor = 'not-allowed';
       }
 
-      buyBtn.onclick = async () => {
-        if (quantity === 0) return;
-        const name = prompt('الرجاء إدخال اسمك لإتمام الطلب:');
-        if (!name) return;
+      // Quantity Controls
+      const qtyInput = document.getElementById('qtyInput');
+      const plusBtn = document.getElementById('plusBtn');
+      const minusBtn = document.getElementById('minusBtn');
 
-        const cart = [{ id: p.id, title: p.title, price: p.price, qty: 1 }];
-        const total = p.price || 0;
-        if (window.supabase) {
-          await supabase.from('orders').insert([{ items: cart, total, name }]);
-          alert('تم إنشاء الطلب بنجاح ✅');
-        } else {
-          const ord = JSON.parse(localStorage.getItem('local_orders') || '[]');
-          ord.unshift({ id: Date.now(), items: cart, total, name });
-          localStorage.setItem('local_orders', JSON.stringify(ord));
-          alert('تم إنشاء طلب تجريبي محلي');
+      plusBtn.onclick = () => {
+        qtyInput.value = parseInt(qtyInput.value) + 1;
+      };
+
+      minusBtn.onclick = () => {
+        if (parseInt(qtyInput.value) > 1) {
+          qtyInput.value = parseInt(qtyInput.value) - 1;
         }
       };
+
+      // Add to Cart functionality
+      buyBtn.onclick = () => {
+        if (quantity === 0) return;
+
+        const qty = parseInt(qtyInput.value) || 1;
+
+        // Get existing cart
+        const cart = JSON.parse(localStorage.getItem('cart_stickers') || '[]');
+
+        // Check if product already exists in cart
+        const existing = cart.find(x => x.id === p.id);
+        if (existing) {
+          existing.qty += qty;
+        } else {
+          cart.push({
+            id: p.id,
+            title: p.title,
+            price: p.price,
+            thumb: p.image_url || p.thumb,
+            qty: qty
+          });
+        }
+
+        // Save cart
+        localStorage.setItem('cart_stickers', JSON.stringify(cart));
+
+        // Show success message
+        alert(`✅ تمت إضافة ${qty} من ${p.title} إلى العلاگه بنجاح!`);
+
+        // Redirect to main page
+        window.location.href = 'index.html';
+      };
     }
+
 
   </script>
 </body>

@@ -591,9 +591,25 @@ footer i:hover {
         font-size: 14px !important;
     }
 
-    /* Quantity Control - hide on mobile */
+    /* Quantity Control - responsive on mobile */
     .quantity-control {
-        display: none !important;
+        display: flex !important;
+        padding: 4px;
+        border-radius: 10px;
+        gap: 2px;
+    }
+
+    .qty-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+        border-radius: 8px;
+    }
+
+    .qty-input {
+        width: 35px;
+        font-size: 13px;
+        padding: 4px;
     }
 
     /* Add to Cart Button */
@@ -751,6 +767,27 @@ footer i:hover {
     .price-box .price {
         font-size: 12px !important;
         margin-bottom: 0 !important;
+    }
+
+    /* Quantity Control - smaller for very small screens */
+    .quantity-control {
+        display: flex !important;
+        padding: 3px;
+        border-radius: 8px;
+        gap: 1px;
+    }
+
+    .qty-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+        border-radius: 6px;
+    }
+
+    .qty-input {
+        width: 30px;
+        font-size: 12px;
+        padding: 3px;
     }
 
     /* Add to Cart Button */

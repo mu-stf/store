@@ -290,6 +290,515 @@
       background: var(--white);
       box-shadow: 0 0 0 3px rgba(75, 95, 118, 0.1);
     }
+
+    /* Order Status Badges */
+    .status-badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffc107;
+    }
+
+    .status-ready {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #17a2b8;
+    }
+
+    .status-delivered {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #28a745;
+    }
+
+    /* Order Status Tabs */
+    .order-status-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .order-status-tab {
+      padding: 10px 20px;
+      border-radius: 25px;
+      border: 2px solid var(--border-color);
+      background: var(--white);
+      cursor: pointer;
+      font-weight: 600;
+      font-family: inherit;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .order-status-tab:hover {
+      border-color: var(--primary);
+      background: var(--bg-body);
+    }
+
+    .order-status-tab.active {
+      background: var(--primary);
+      color: var(--white);
+      border-color: var(--primary);
+    }
+
+    .order-status-tab .count {
+      background: rgba(0, 0, 0, 0.1);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+    }
+
+    .order-status-tab.active .count {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Status Action Buttons */
+    .status-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .status-btn {
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--white);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: var(--transition);
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .status-btn.btn-pending {
+      border-color: #ffc107;
+      color: #856404;
+    }
+
+    .status-btn.btn-pending:hover {
+      background: #fff3cd;
+    }
+
+    .status-btn.btn-ready {
+      border-color: #17a2b8;
+      color: #0c5460;
+    }
+
+    .status-btn.btn-ready:hover {
+      background: #d1ecf1;
+    }
+
+    .status-btn.btn-delivered {
+      border-color: #28a745;
+      color: #155724;
+    }
+
+    .status-btn.btn-delivered:hover {
+      background: #d4edda;
+    }
+
+    /* Quantity Control in Admin */
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--bg-body);
+      padding: 5px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .qty-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--white);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .qty-btn:hover {
+      background: var(--primary);
+      color: var(--white);
+      border-color: var(--primary);
+    }
+
+    .qty-input {
+      width: 50px;
+      text-align: center;
+      border: none;
+      background: transparent;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    /* ==================== RESPONSIVE DESIGN ==================== */
+
+    /* Large Tablets (1024px) */
+    @media (max-width: 1024px) {
+      .container {
+        padding: 0 15px;
+      }
+
+      #statsSection {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+
+      .customer-meta {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* Tablets (768px) */
+    @media (max-width: 768px) {
+
+      /* Header */
+      .header-inner {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .logo {
+        font-size: 22px;
+        order: -1;
+        width: 100%;
+        text-align: center;
+      }
+
+      .main-nav a,
+      .main-nav button {
+        margin-right: 15px;
+        font-size: 14px;
+      }
+
+      /* Dashboard Header */
+      #adminContent>div:first-child h1 {
+        font-size: 1.8rem !important;
+      }
+
+      /* Stats Section */
+      #statsSection {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+      }
+
+      .stat-card {
+        padding: 20px !important;
+      }
+
+      .stat-card div[style*="font-size: 2.8rem"],
+      .stat-card div[style*="font-size: 2.2rem"] {
+        font-size: 2rem !important;
+      }
+
+      /* Tabs Navigation */
+      div[style*="display: flex; gap: 30px; margin-bottom: 40px"] {
+        gap: 15px !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+      }
+
+      .tab-btn {
+        font-size: 0.95rem !important;
+        padding: 12px 10px !important;
+      }
+
+      /* Admin Panels */
+      .admin-panel,
+      section[style*="background: var(--white); padding: 30px"] {
+        padding: 20px !important;
+        border-radius: 12px !important;
+      }
+
+      /* Form Grids */
+      div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Product Row */
+      .st-row {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+        padding: 15px;
+      }
+
+      .st-actions {
+        justify-content: flex-start;
+        width: 100%;
+      }
+
+      .st-actions button {
+        flex: 1;
+        justify-content: center;
+      }
+
+      /* Order Card */
+      .order-card {
+        padding: 20px;
+        border-radius: 15px;
+      }
+
+      .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .customer-meta {
+        grid-template-columns: 1fr !important;
+        gap: 10px;
+      }
+
+      .customer-meta .meta-item[style*="grid-column: span 2"] {
+        grid-column: span 1 !important;
+      }
+
+      /* Order Status Tabs */
+      .order-status-tabs {
+        justify-content: center;
+      }
+
+      .order-status-tab {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+      }
+
+      /* Status Actions */
+      .status-actions {
+        flex-direction: column;
+      }
+
+      .status-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* Quantity Control */
+      .quantity-control {
+        padding: 4px;
+      }
+
+      .qty-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+      }
+
+      .qty-input {
+        width: 40px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Mobile Phones (480px) */
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 10px;
+      }
+
+      /* Header */
+      .site-header {
+        padding: 10px 0;
+      }
+
+      .logo {
+        font-size: 20px;
+      }
+
+      .main-nav a,
+      .main-nav button {
+        margin-right: 10px;
+        font-size: 13px;
+      }
+
+      /* Dashboard Header */
+      #adminContent>div:first-child {
+        margin: 20px 0 !important;
+        padding-bottom: 20px !important;
+      }
+
+      #adminContent>div:first-child h1 {
+        font-size: 1.4rem !important;
+      }
+
+      #adminContent>div:first-child p {
+        font-size: 0.85rem !important;
+      }
+
+      /* Stats */
+      .stat-card {
+        padding: 15px !important;
+      }
+
+      .stat-card div[style*="font-size: 2.8rem"],
+      .stat-card div[style*="font-size: 2.2rem"] {
+        font-size: 1.6rem !important;
+      }
+
+      /* Tabs */
+      .tab-btn {
+        font-size: 0.85rem !important;
+        padding: 10px 5px !important;
+        gap: 5px !important;
+      }
+
+      .tab-btn i {
+        font-size: 1rem !important;
+      }
+
+      /* Forms */
+      input,
+      select,
+      textarea {
+        padding: 12px;
+        font-size: 0.9rem;
+      }
+
+      button[style*="padding: 15px"] {
+        padding: 12px !important;
+        font-size: 0.9rem !important;
+      }
+
+      /* Product Row */
+      .st-row {
+        padding: 12px;
+      }
+
+      .st-info {
+        font-size: 0.95rem;
+      }
+
+      .st-actions button {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+      }
+
+      /* Order Card */
+      .order-card {
+        padding: 15px;
+        border-radius: 12px;
+      }
+
+      .order-header strong {
+        font-size: 1rem !important;
+      }
+
+      .meta-item {
+        font-size: 0.85rem;
+      }
+
+      .meta-item strong {
+        font-size: 0.75rem !important;
+      }
+
+      .order-items-list {
+        padding: 12px;
+        font-size: 0.85rem;
+      }
+
+      .delete-order-btn {
+        padding: 10px 18px;
+        font-size: 0.85rem;
+        width: 100%;
+      }
+
+      /* Order Status Tabs */
+      .order-status-tabs {
+        gap: 8px;
+      }
+
+      .order-status-tab {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        flex: 1;
+        justify-content: center;
+        min-width: 80px;
+      }
+
+      /* Status Badges */
+      .status-badge {
+        padding: 4px 10px;
+        font-size: 0.7rem;
+      }
+
+      /* Quantity Control */
+      .quantity-control {
+        padding: 3px;
+      }
+
+      .qty-btn {
+        width: 26px;
+        height: 26px;
+        font-size: 12px;
+        border-radius: 6px;
+      }
+
+      .qty-input {
+        width: 35px;
+        font-size: 0.85rem;
+      }
+
+      /* Database Info Grid */
+      div[style*="display: grid; grid-template-columns: 1fr 1fr; gap: 20px"] {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+      }
+    }
+
+    /* Very Small Screens (360px) */
+    @media (max-width: 360px) {
+      .logo {
+        font-size: 18px;
+      }
+
+      .main-nav a,
+      .main-nav button {
+        margin-right: 8px;
+        font-size: 12px;
+      }
+
+      #adminContent>div:first-child h1 {
+        font-size: 1.2rem !important;
+      }
+
+      .tab-btn {
+        font-size: 0.75rem !important;
+      }
+
+      .order-status-tab {
+        padding: 5px 8px;
+        font-size: 0.7rem;
+      }
+    }
   </style>
 </head>
 
@@ -454,8 +963,29 @@
         <section
           style="background: var(--white); padding: 30px; border-radius: 15px; box-shadow: var(--shadow-md); border: 1px solid rgba(197, 160, 33, 0.1);">
           <h3 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-            <i class="fa-solid fa-receipt"></i> الطلبات الحديثة (<span id="orderCount">0</span>)
+            <i class="fa-solid fa-receipt"></i> إدارة الطلبات (<span id="orderCount">0</span>)
           </h3>
+
+          <!-- Order Status Tabs -->
+          <div class="order-status-tabs">
+            <button class="order-status-tab active" onclick="filterOrders('all')" data-status="all">
+              <i class="fa-solid fa-list"></i> الكل
+              <span class="count" id="countAll">0</span>
+            </button>
+            <button class="order-status-tab" onclick="filterOrders('pending')" data-status="pending">
+              <i class="fa-solid fa-clock"></i> قيد التجهيز
+              <span class="count" id="countPending">0</span>
+            </button>
+            <button class="order-status-tab" onclick="filterOrders('ready')" data-status="ready">
+              <i class="fa-solid fa-box"></i> جاهزة
+              <span class="count" id="countReady">0</span>
+            </button>
+            <button class="order-status-tab" onclick="filterOrders('delivered')" data-status="delivered">
+              <i class="fa-solid fa-check-circle"></i> تم التسليم
+              <span class="count" id="countDelivered">0</span>
+            </button>
+          </div>
+
           <div id="orders" style="display: grid; gap: 15px;"></div>
         </section>
       </div>
@@ -689,54 +1219,199 @@
     }
 
     // Load orders
+    let allOrders = [];
+    let currentStatusFilter = 'all';
+
     async function loadOrders() {
       const el = document.getElementById('orders');
       el.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--muted);"><i class="fa-solid fa-spinner fa-spin"></i> جاري التحميل...</div>';
 
       try {
-        let orders = [];
         if (isOnline) {
           const { data } = await window.supabase
             .from('orders')
             .select('*')
             .order('created_at', { ascending: false });
-          orders = data || [];
+          allOrders = data || [];
         } else {
-          orders = JSON.parse(localStorage.getItem('local_orders') || '[]');
+          allOrders = JSON.parse(localStorage.getItem('local_orders') || '[]');
         }
 
-        if (!orders.length) {
-          el.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--muted);">📭 لا توجد طلبات</div>';
-          return;
-        }
+        // Ensure all orders have a status
+        allOrders = allOrders.map(o => ({
+          ...o,
+          status: o.status || 'pending'
+        }));
 
-        el.innerHTML = orders.map(o => {
-          const id = o.id || o.created_at;
-          const itemsStr = (o.items || []).map(i => `${i.title} (x${i.qty})`).join(', ');
-          return `
-          <div class="order-card">
-            <div class="order-header">
-              <strong style="color: var(--primary); font-size: 1.1rem;">👤 ${o.name || 'مستخدم مجهول'}</strong>
-              <span style="font-weight: 900; color: var(--accent);">${o.total} د.ع</span>
-            </div>
-            <div class="customer-meta">
-              <div class="meta-item"><strong>رقم الهاتف</strong> ${o.phone || 'غير مسجل'}</div>
-              <div class="meta-item"><strong>المحافظة</strong> ${o.city || 'غير محدد'}</div>
-              <div class="meta-item" style="grid-column: span 2;"><strong>العنوان</strong> ${o.address || 'لا يوجد تفاصيل'}</div>
-            </div>
-            <div class="order-items-list">
-              <strong>📦 العناصر:</strong><br>
-              ${itemsStr || 'لا توجد عناصر'}
-            </div>
-            <div style="margin-top: 15px;">
-              <button class="delete-order-btn" onclick="deleteOrder('${id}')">حذف الطلب</button>
-            </div>
-          </div>`;
-        }).join('');
+        updateOrderCounts();
+        renderOrders();
       } catch (e) {
         console.error('Error loading orders:', e);
         el.innerHTML = '<div style="color: red; padding: 20px;">❌ خطأ في التحميل</div>';
       }
+    }
+
+    // Update order counts for each status
+    function updateOrderCounts() {
+      const pending = allOrders.filter(o => o.status === 'pending').length;
+      const ready = allOrders.filter(o => o.status === 'ready').length;
+      const delivered = allOrders.filter(o => o.status === 'delivered').length;
+
+      document.getElementById('countAll').textContent = allOrders.length;
+      document.getElementById('countPending').textContent = pending;
+      document.getElementById('countReady').textContent = ready;
+      document.getElementById('countDelivered').textContent = delivered;
+    }
+
+    // Filter orders by status
+    function filterOrders(status) {
+      currentStatusFilter = status;
+
+      // Update active tab
+      document.querySelectorAll('.order-status-tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.dataset.status === status) {
+          tab.classList.add('active');
+        }
+      });
+
+      renderOrders();
+    }
+
+    // Render orders based on current filter
+    function renderOrders() {
+      const el = document.getElementById('orders');
+
+      let filteredOrders = allOrders;
+      if (currentStatusFilter !== 'all') {
+        filteredOrders = allOrders.filter(o => o.status === currentStatusFilter);
+      }
+
+      if (!filteredOrders.length) {
+        el.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--muted);">📭 لا توجد طلبات في هذا القسم</div>';
+        return;
+      }
+
+      el.innerHTML = filteredOrders.map(o => {
+        const id = o.id || o.created_at;
+        const itemsStr = (o.items || []).map(i => `${i.title} (x${i.qty})`).join(', ');
+        const status = o.status || 'pending';
+
+        // Status badge
+        let statusBadge = '';
+        if (status === 'pending') {
+          statusBadge = '<span class="status-badge status-pending"><i class="fa-solid fa-clock"></i> قيد التجهيز</span>';
+        } else if (status === 'ready') {
+          statusBadge = '<span class="status-badge status-ready"><i class="fa-solid fa-box"></i> جاهز للتسليم</span>';
+        } else if (status === 'delivered') {
+          statusBadge = '<span class="status-badge status-delivered"><i class="fa-solid fa-check-circle"></i> تم التسليم</span>';
+        }
+
+        // Format date
+        const orderDate = o.created_at ? new Date(o.created_at).toLocaleDateString('ar-IQ', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }) : 'غير محدد';
+
+        return `
+        <div class="order-card" data-order-id="${id}" data-status="${status}">
+          <div class="order-header">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <strong style="color: var(--primary); font-size: 1.1rem;">👤 ${o.name || 'مستخدم مجهول'}</strong>
+              ${statusBadge}
+            </div>
+            <div style="text-align: left;">
+              <div style="font-weight: 900; color: var(--primary); font-size: 1.2rem;">${(o.total || 0).toLocaleString('ar-IQ')} د.ع</div>
+              <div style="font-size: 0.8rem; color: var(--text-light);">📅 ${orderDate}</div>
+            </div>
+          </div>
+          <div class="customer-meta">
+            <div class="meta-item">
+              <strong><i class="fa-solid fa-phone"></i> رقم الهاتف</strong> 
+              <a href="tel:${o.phone}" style="color: var(--primary); text-decoration: none;">${o.phone || 'غير مسجل'}</a>
+            </div>
+            <div class="meta-item">
+              <strong><i class="fa-solid fa-map-marker-alt"></i> المحافظة</strong> 
+              ${o.city || 'غير محدد'}
+            </div>
+            <div class="meta-item" style="grid-column: span 2;">
+              <strong><i class="fa-solid fa-home"></i> العنوان التفصيلي</strong> 
+              ${o.address || 'لا يوجد تفاصيل'}
+            </div>
+            ${o.notes ? `<div class="meta-item" style="grid-column: span 2;"><strong><i class="fa-solid fa-sticky-note"></i> ملاحظات</strong> ${o.notes}</div>` : ''}
+          </div>
+          <div class="order-items-list">
+            <strong>📦 العناصر:</strong><br>
+            ${itemsStr || 'لا توجد عناصر'}
+          </div>
+          
+          <!-- Status Actions -->
+          <div class="status-actions">
+            ${status !== 'pending' ? `<button class="status-btn btn-pending" onclick="updateOrderStatus('${id}', 'pending')"><i class="fa-solid fa-clock"></i> قيد التجهيز</button>` : ''}
+            ${status !== 'ready' ? `<button class="status-btn btn-ready" onclick="updateOrderStatus('${id}', 'ready')"><i class="fa-solid fa-box"></i> جاهز</button>` : ''}
+            ${status !== 'delivered' ? `<button class="status-btn btn-delivered" onclick="updateOrderStatus('${id}', 'delivered')"><i class="fa-solid fa-check-circle"></i> تم التسليم</button>` : ''}
+            <button class="delete-order-btn" onclick="deleteOrder('${id}')"><i class="fa-solid fa-trash"></i> حذف</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // Update order status
+    async function updateOrderStatus(id, newStatus) {
+      try {
+        if (isOnline) {
+          await window.supabase.from('orders').update({ status: newStatus }).eq('id', id);
+        } else {
+          const orders = JSON.parse(localStorage.getItem('local_orders') || '[]');
+          const idx = orders.findIndex(o => String(o.id) === String(id) || String(o.created_at) === String(id));
+          if (idx > -1) {
+            orders[idx].status = newStatus;
+            localStorage.setItem('local_orders', JSON.stringify(orders));
+          }
+        }
+
+        // Update local state
+        const orderIdx = allOrders.findIndex(o => String(o.id) === String(id) || String(o.created_at) === String(id));
+        if (orderIdx > -1) {
+          allOrders[orderIdx].status = newStatus;
+        }
+
+        updateOrderCounts();
+        renderOrders();
+
+        // Show toast notification
+        showToast(`تم تحديث حالة الطلب إلى: ${getStatusLabel(newStatus)}`);
+      } catch (e) {
+        console.error('Error updating order status:', e);
+        alert('خطأ في تحديث حالة الطلب');
+      }
+    }
+
+    // Get status label
+    function getStatusLabel(status) {
+      switch (status) {
+        case 'pending': return 'قيد التجهيز';
+        case 'ready': return 'جاهز للتسليم';
+        case 'delivered': return 'تم التسليم';
+        default: return status;
+      }
+    }
+
+    // Show toast notification
+    function showToast(message) {
+      const existing = document.querySelector('.toast-notification');
+      if (existing) existing.remove();
+
+      const toast = document.createElement('div');
+      toast.className = 'toast-notification';
+      toast.style.cssText = 'position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--primary); color: var(--white); padding: 15px 30px; border-radius: 50px; z-index: 9999; box-shadow: var(--shadow-lg); font-weight: 700; animation: slideUp 0.3s ease-out;';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      setTimeout(() => toast.remove(), 3000);
     }
 
     // Delete order
